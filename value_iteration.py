@@ -15,7 +15,7 @@ class ValueIteration:
         self.n_actions = n_actions
         self.probs = probs
 
-    def run(self, gamma, epslion):
+    def run(self, gamma, epslion, reward_function=None):
         probs = self.probs
         n_states = self.n_states
         n_actions = self.n_actions
@@ -25,6 +25,7 @@ class ValueIteration:
             A = np.zeros(self.n_actions)
             for action in range(n_actions):
                 for prob, next_state, reward, done in probs[state][action]:
+                    reward = reward if reward_function is None else reward_function(state)
                     A[action] += prob * (reward + gamma * V[next_state])
             return A
 
