@@ -38,9 +38,9 @@ class ValueIteration:
         policy = np.zeros([n_states, n_actions])
         for state in range(n_states):
             A = compute_action_value(state)
-            best_action = A.argmax()
-            policy[state, best_action] = 1.
-
+            policy[state] = A
+        policy -= policy.max(axis=1, keepdims=True)
+        policy = np.exp(policy) / np.exp(policy).sum(axis=1, keepdims=True)
         return V, policy
 
 
