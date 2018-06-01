@@ -10,7 +10,7 @@ class ValueIteration:
         self.n_actions = n_actions
         self.probs = probs
 
-    def run(self, gamma, epslion, reward_function=None):
+    def __call__(self, gamma, epslion, reward_function=None):
         probs = self.probs
         n_states = self.n_states
         n_actions = self.n_actions
