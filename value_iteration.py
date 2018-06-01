@@ -13,7 +13,7 @@ class ValueIteration:
         self.n_actions = n_actions
 
     def run(self, env, gamma, epslion):
-        def compute_expected_reward(state):
+        def compute_action_value(state):
             A = np.zeros(self.n_actions)
             for action in range(self.n_actions):
                 for prob, next_state, reward, done in env.P[state][action]:
@@ -23,7 +23,7 @@ class ValueIteration:
         while True:
             delta = 0
             for state in range(self.n_states):
-                A = compute_expected_reward(state)
+                A = compute_action_value(state)
                 best_action_value = A.max()
                 delta = max(delta, np.abs(best_action_value - self.V[state]))
                 self.V[state] = best_action_value
@@ -32,7 +32,7 @@ class ValueIteration:
 
         policy = np.zeros([self.n_states, self.n_actions])
         for state in range(self.n_states):
-            A = compute_expected_reward(state)
+            A = compute_action_value(state)
             best_action = A.argmax()
             policy[state, best_action] = 1.
 
