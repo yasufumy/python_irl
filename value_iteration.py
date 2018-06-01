@@ -51,13 +51,26 @@ if __name__ == '__main__':
     print('Frozen Lake Env{}'.format(env.render('ansi').getvalue()))
 
     print('Learned Policy')
-    reshaped_policy = policy.argmax(axis=1).reshape(env.desc.shape)
-    reshaped_V = V.reshape(env.desc.shape)
-    num2arrow = ['←', '↓', '→', '↑']
-    for row, v in zip(reshaped_policy, reshaped_V):
-        for state, value in zip(row, v):
-            if value:
-                print(num2arrow[state], end=' ')
-            else:
-                print('・', end='')
-        print()
+    # reshaped_policy = policy.argmax(axis=1).reshape(env.desc.shape)
+    # reshaped_V = V.reshape(env.desc.shape)
+    # num2arrow = ['←', '↓', '→', '↑']
+    # for row, v in zip(reshaped_policy, reshaped_V):
+    #     for state, value in zip(row, v):
+    #         if value:
+    #             print(num2arrow[state], end=' ')
+    #         else:
+    #             print('・', end='')
+    #     print()
+
+    goal_count = 0
+    loop_count = 0
+    while goal_count < 10:
+        state = env.reset()
+        done = False
+        while not done:
+            action = np.random.multinomial(1, policy[state]).argmax()
+            state, reward, done, info = env.step(action)
+        if reward == 1:
+            goal_count += 1
+        loop_count += 1
+    print(f'{goal_count/loop_count}')
