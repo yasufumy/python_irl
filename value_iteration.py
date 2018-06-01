@@ -3,11 +3,6 @@ from functools import reduce
 
 import numpy as np
 
-import gym
-from gym.envs.registration import register
-register(id='EasyFrozenLakeEnv-v0',  entry_point='gym.envs.toy_text:FrozenLakeEnv',
-         kwargs={'is_slippery': False})
-
 
 class ValueIteration:
     def __init__(self, n_states, n_actions, probs):
@@ -65,22 +60,14 @@ def sample_trajectories(env, policy, n_steps, n_samples):
         trajectory = []
         while not done:
             action = np.random.multinomial(1, policy[state]).argmax()
-            trajectory.append((state, action))
+            trajectory.append(state)
             state, reward, done, info = env.step(action)
 
         len_trajectory = len(trajectory)
         if n_steps != len_trajectory:
-            trajectory.extend(
-                [(state, action) for _ in range(n_steps - len_trajectory)])
+            trajectory.extend([state] * (n_steps - len_trajectory))
         if reward == 1.:
             trajectories.append(trajectory)
             goal_count += 1
         loop_count += 1
-    return trajectories
-
-
-if __name__ == '__main__':
-    env = gym.make('EasyFrozenLakeEnv-v0')
-    V, policy = ValueIteration(env.nS, env.nA, env.P).run(0.99, 1e-5)
-
-    print(sample_trajectories(env, policy, 10, 10))
+    return np.array(trajectories)
