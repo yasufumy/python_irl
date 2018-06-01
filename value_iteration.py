@@ -47,7 +47,6 @@ class ValueIteration:
 
 def sample_trajectories(env, policy, n_steps, n_samples):
     goal_count = 0
-    loop_count = 0
     ignore_states = reduce(
         np.bitwise_or, [env.desc.flatten() == s for s in (b'H', b'G')]).nonzero()[0].tolist()
     states = [i for i in range(env.nS) if i not in ignore_states]
@@ -58,16 +57,14 @@ def sample_trajectories(env, policy, n_steps, n_samples):
         env.s = state
         done = False
         trajectory = []
-        while not done:
+        for i in range(n_steps):
             action = np.random.multinomial(1, policy[state]).argmax()
             trajectory.append(state)
             state, reward, done, info = env.step(action)
-
-        len_trajectory = len(trajectory)
-        if n_steps != len_trajectory:
-            trajectory.extend([state] * (n_steps - len_trajectory))
+            if done:
+                trajectory.extend([state] * (n_steps - len(trajectory)))
+                break
         if reward == 1.:
             trajectories.append(trajectory)
             goal_count += 1
-        loop_count += 1
     return np.array(trajectories)
