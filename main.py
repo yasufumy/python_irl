@@ -7,7 +7,7 @@ import gym
 from gym.envs.registration import register
 
 from value_iteration import ValueIteration, sample_trajectories
-from maxent_irl import Reward, StateVisitationFrequency, compute_expert_feature
+from maxent_irl import Reward, StateVisitationFrequency, compute_experts_feature
 
 register(id='EasyFrozenLakeEnv-v0',  entry_point='gym.envs.toy_text:FrozenLakeEnv',
          kwargs={'is_slippery': False})
@@ -19,7 +19,7 @@ def train(gamma, epsilon, n_samples, n_steps, n_epochs, learning_rate):
 
     # preparing an expert
     V, policy = value_iteration(gamma, epsilon)
-    trajectories = sample_trajectories(env, policy, n_samples, n_steps)
+    trajectories = sample_trajectories(env, policy, n_steps, n_samples)
     experts_feature = compute_experts_feature(env.nS, trajectories)
 
     # training
