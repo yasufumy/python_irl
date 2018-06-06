@@ -29,8 +29,8 @@ def train(gamma, epsilon, n_samples, n_steps, n_epochs, learning_rate):
 
     for i in range(n_epochs):
         V, policy = value_iteration(gamma, epsilon, reward_function)
-        mu = svf(policy, trajectories)
-        grad = experts_feature - feature_matrix.T.dot(mu)
+        P = svf(policy, trajectories)
+        grad = experts_feature - feature_matrix.T.dot(P)
         reward_function.update(learning_rate * grad)
 
     return reward_function(feature_matrix)
