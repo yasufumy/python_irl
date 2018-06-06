@@ -49,5 +49,6 @@ if __name__ == '__main__':
     reward = train(args.gamma, args.epsilon, args.n_samples, args.n_steps,
                    args.n_epochs, args.learning_rate)
     plt.pcolor(reward.reshape(4, 4)[::-1, :])
+    plt.title(f'samples: {args.n_samples}, steps: {args.n_steps}')
     plt.colorbar()
     plt.show()
