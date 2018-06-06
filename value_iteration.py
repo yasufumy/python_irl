@@ -1,5 +1,4 @@
 import random
-from functools import reduce
 
 import numpy as np
 
@@ -47,8 +46,8 @@ class ValueIteration:
 
 def sample_trajectories(env, policy, n_steps, n_samples):
     goal_count = 0
-    ignore_states = reduce(
-        np.bitwise_or, [env.desc.flatten() == s for s in (b'H', b'G')]).nonzero()[0].tolist()
+    ignore_states = np.bitwise_or.reduce(
+        [env.desc.flatten() == s for s in (b'H', b'G')]).nonzero()[0].tolist()
     states = [i for i in range(env.nS) if i not in ignore_states]
     trajectories = []
     while goal_count < n_samples:
