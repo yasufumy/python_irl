@@ -67,3 +67,30 @@ def sample_trajectories(env, policy, n_steps, n_samples):
             trajectories.append(trajectory)
             goal_count += 1
     return np.array(trajectories)
+
+
+if __name__ == '__main__':
+    from time import sleep
+
+    import gym
+    from gym.envs.registration import register
+
+    register(id='EasyFrozenLakeEnv-v0', entry_point='gym.envs.toy_text:FrozenLakeEnv',
+             kwargs={'is_slippery': False})
+
+    env = gym.make('EasyFrozenLakeEnv-v0')
+    value_iteration = ValueIteration(env.nS, env.nA, env.P)
+
+    V, policy = value_iteration(0.99, 1e-5)
+
+    state = env.reset()
+    done = False
+    G = 0
+    while not done:
+        env.render()
+        sleep(1)
+        action = np.random.multinomial(1, policy[state]).argmax()
+        state, reward, done, _ = env.step(action)
+        G += reward
+    env.render()
+    print(f'Total reward: {G}')
